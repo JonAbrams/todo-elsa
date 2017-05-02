@@ -1,0 +1,31 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+.todo-app {
+  margin-left: 20px;
+}
+
+.todo-list {
+  padding: 0;
+}
+
+.todo {
+  list-style: none;
+}
+
+.todo__input {
+  margin: 0 5px 5px 5px;
+}
+
+.todo__remove {
+  border: none;
+  background: white;
+  cursor: pointer;
+}
+
+.todo--done .todo__input {
+  text-decoration: line-through;
+}
