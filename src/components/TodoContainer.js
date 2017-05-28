@@ -2,7 +2,6 @@ import React from 'react';
 import TodoList from './TodoList';
 import AddTodo from './AddTodo';
 import uuidV4 from 'uuid/v4';
-import update from 'immutability-helper';
 import vex from 'vex-js/src/vex.combined';
 import 'vex-js/dist/css/vex.css';
 import 'vex-js/dist/css/vex-theme-os.css';
@@ -37,12 +36,10 @@ export default class TodoContainer extends React.Component {
     const todoIndex = this.state.todos.indexOf(todo);
     const message = target.value;
 
-    const updatedTodo = update(todo, { $merge: { message } });
+    const updatedTodo = todo.update({ $merge: { message } });
 
     this.setState(prevState => ({
-      todos: update(prevState.todos, {
-        $splice: [[todoIndex, 1, updatedTodo]]
-      })
+      todos: prevState.todos.splice(todoIndex, 1, updatedTodo)
     }));
   }
 
@@ -55,9 +52,7 @@ export default class TodoContainer extends React.Component {
         if (!confirmed) return;
 
         this.setState(prevState => ({
-          todos: update(prevState.todos, {
-            $splice: [[todoIndex, 1]]
-          })
+          todos: prevState.todos.splice(todoIndex, 1)
         }));
       }
     });
@@ -67,15 +62,13 @@ export default class TodoContainer extends React.Component {
     this.setState(prevState => {
       let { todos } = prevState;
       const todoIndex = todos.indexOf(todo);
-      todo = update(todo, {
+      todo = todo.update({
         $merge: { done: target.checked }
       });
-      todos = update(todos, { $splice: [[todoIndex, 1, todo]] });
+      todos = todos.splice(todoIndex, 1, todo);
       // Place done todo items at the end of the list
-      todos = todos.slice().sort((a,b) => a.done && !b.done)
-      return {
-        todos: update(todos, { $set: todos })
-      };
+      todos = todos.sort((a,b) => a.done && !b.done);
+      return { todos };
     });
   }
 
